@@ -49,7 +49,7 @@ public class KhachHangDAO extends HanniDAO<KhachHang, String>{
             return list.get(0);    
     }
 
-    @Override//lay dlieu tu sql do len list
+    @Override
     public List<KhachHang> selectBySql(String sql, Object... args) {
         List<KhachHang> list = new ArrayList<>();
         try {

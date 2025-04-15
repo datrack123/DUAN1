@@ -13,7 +13,7 @@ public class JdbcHelper {
     private static String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static String url ="jdbc:sqlserver://localhost:1433;database=HANNI_STORE2;encrypt=true;trustServerCertificate=true";
     private static String user = "sa";
-    private static String pass = "123456";
+    private static String pass = "Nam123123@";
      
     static {
         try {

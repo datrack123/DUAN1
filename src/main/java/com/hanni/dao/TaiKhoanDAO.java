@@ -15,7 +15,6 @@ public class TaiKhoanDAO extends HanniDAO<TaiKhoan, String>{
 
     @Override
     public void insert(TaiKhoan entity) {
-        
         JdbcHelper.update(INSERT_SQL, entity.getMaTK(),entity.getMatKhau(), entity.getHoTen(),
                 entity.getDiaChi(),entity.getSdt(),entity.getEmail(), entity.isVaiTro());
     }

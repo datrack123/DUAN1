@@ -33,7 +33,7 @@ public class DonHangChiTietDAO extends HanniDAO<DonHangChiTiet, String>{
                 entity.getDonGia(),entity.getSoLuong());
     }
 
-       @Override
+    @Override
     public void update(DonHangChiTiet entity) {
         JdbcHelper.update(UPDATE_SQL, entity.getMaSP(), entity.getMaDH(),
                 entity.getDonGia(),entity.getSoLuong(),entity.getMaDHCT());

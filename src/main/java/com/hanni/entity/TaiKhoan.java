@@ -90,8 +90,4 @@ public class TaiKhoan {
           this.sdt = sdt;
           this.vaiTro = vaiTro;
     }  
-
-    public String getPhoneNumber() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

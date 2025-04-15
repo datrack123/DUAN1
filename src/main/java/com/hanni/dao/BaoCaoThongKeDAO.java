@@ -22,21 +22,21 @@ public class BaoCaoThongKeDAO extends HanniDAO<BaoCaoThongKe, String> {
     final String SELECT_ALL_SQL = "EXEC ThongKeDonHang";
     final String Year_SQL = "EXEC HienThiDoanhThu @Nam = 2023;";
     //final String SalesReport_SQL = "EXEC ProductSalesReport @StartDate = '2023-01-01', @EndDate = '2023-12-31';";
-    final String OrderHistory_SQL = "EXEC CustomerOrderHistory @CustomerID = 'kh002';";
+    //final String OrderHistory_SQL = "EXEC CustomerOrderHistory @CustomerID = 'kh002';";
     
     // Lấy ngày, tháng, năm hiện tại
     LocalDate now = LocalDate.now();
     // Lấy ngày hôm sau
     LocalDate tomorrow = now.plusDays(1);
     // Thay thế giá trị của biến @StartDate và @EndDate
-    private final String SalesReport_Day_SQL = "EXEC ProductSalesReport   '" + now + "', '" + tomorrow + "';";
+    private final String SalesReport_Day_SQL = "EXEC productsalesreport '"+now+"','"+tomorrow+"'";
     
     private static final String SalesReport_Month_SQL;
     
     Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
     // Thay thế giá trị của biến @StartDate và @EndDate
-    final String SalesReport_Year_SQL = "EXEC ProductSalesReport  '" + year + "-01-01', '" + year + "-12-31';";
+    final String SalesReport_Year_SQL = "EXEC ProductSalesReport '" + year + "-01-01','" + year + "-12-31';";
 
     static {
         // Khối static để khởi tạo giá trị của biến
@@ -44,7 +44,7 @@ public class BaoCaoThongKeDAO extends HanniDAO<BaoCaoThongKe, String> {
         LocalDate currentDate = LocalDate.now();
 
         // Câu SQL cho báo cáo sản phẩm
-        SalesReport_Month_SQL = String.format("EXEC ProductSalesReport '%s', '%s';",
+        SalesReport_Month_SQL = String.format("EXEC ProductSalesReport '%s','%s';",
                 currentDate.withDayOfMonth(1).format(formatter),
                 currentDate.withDayOfMonth(currentDate.lengthOfMonth()).format(formatter));
     }
@@ -88,9 +88,9 @@ public class BaoCaoThongKeDAO extends HanniDAO<BaoCaoThongKe, String> {
             ResultSet rs = JdbcHelper.query(sql, args);
             while(rs.next()) {
                BaoCaoThongKe entity = new BaoCaoThongKe();
-                entity.setTenSanPham(rs.getString("TenSanPham"));
-                entity.setDoanhThu(rs.getDouble("DoanhThu"));
-                entity.setSoLuong(rs.getInt("SoLuongBan"));
+                entity.setTenSanPham(rs.getString("TenSp"));
+                entity.setDoanhThu(rs.getDouble("Doanhthu"));
+                entity.setSoLuong(rs.getInt("soLuongTong"));
                 list.add(entity);
             }
         } catch (Exception e) {

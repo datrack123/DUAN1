@@ -2,8 +2,7 @@ package com.hanni.ui;
 
 import com.hanni.dao.KhachHangDAO;
 import com.hanni.entity.KhachHang;
-import static com.hanni.ui.QLTaiKhoan.isValidEmail;
-import static com.hanni.ui.QLTaiKhoan.isValidPhoneNumber;
+import com.hanni.entity.SanPham;
 import com.hanni.utils.MsgBox;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -75,7 +74,61 @@ public class QLKhachHang1 extends javax.swing.JDialog {
         }
     }
     
-    void validateInput() {
+    boolean MaKHIsExist() {
+        try {
+            List<KhachHang> list = dao.selectAll();
+            for (KhachHang tk : list) {
+                if(txtMaKH.getText().equalsIgnoreCase(tk.getMaKH()))
+                {
+                   return true;
+                }
+            }
+           
+        } catch (Exception e) {
+            MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+         return false;
+    }
+    boolean SDTIsExist() {
+        try {
+            List<KhachHang> list = dao.selectAll();
+            for (KhachHang tk : list) {
+                if(txtSDT.getText().equalsIgnoreCase(tk.getSdt()))
+                {
+                   return true;
+                }
+            }
+           
+        } catch (Exception e) {
+            MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+         return false;
+    }
+    boolean EmailIsExist() {
+        try {
+            List<KhachHang> list = dao.selectAll();
+            for (KhachHang tk : list) {
+                if(txtEmail.getText().equalsIgnoreCase(tk.getEmail()))
+                {
+                   return true;
+                }
+            }
+           
+        } catch (Exception e) {
+            MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
+        }
+         return false;
+    }
+    
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        // Kiểm tra độ dài >= 10 và chỉ chứa số
+        return phoneNumber.matches("\\d{10,}");
+    }
+
+    public static boolean isValidEmail(String email) {
+        return email.contains("@");
+    }
+    boolean validateInput() {
         String maKH = txtMaKH.getText().trim();
         String hoTen = txtHoTen.getText().trim();
         String sdt = txtSDT.getText().trim();
@@ -84,8 +137,38 @@ public class QLKhachHang1 extends javax.swing.JDialog {
         
         if (maKH.isEmpty() ||  hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty()) {
             MsgBox.alert(this, "Vui lòng nhập đầy đủ thông tin!");
-            return;
+            return false;
         }
+
+        if(!isValidPhoneNumber(sdt)){
+            MsgBox.alert(this,"SDT phai la so va co 10 so!");
+            txtSDT.requestFocus();
+            return false;
+        }
+                if(!isValidEmail(email)){
+            MsgBox.alert(this,"Email khong dung dinh dang!!");
+            txtEmail.requestFocus();
+            return false;
+        }
+        if(SDTIsExist())
+        {
+            MsgBox.alert(this,"Khong duoc trung SDT!");
+            txtMaKH.requestFocus();
+            return false;
+        }
+        if(EmailIsExist())
+        {
+            MsgBox.alert(this,"Khong duoc trung email!");
+            txtMaKH.requestFocus();
+            return false;
+        }
+        if(MaKHIsExist())
+        {
+            MsgBox.alert(this,"Khong duoc trung ma khach hang!");
+            txtMaKH.requestFocus();
+            return false;
+        }
+        return true;
     }
     
     KhachHang getForm(){
@@ -131,16 +214,17 @@ public class QLKhachHang1 extends javax.swing.JDialog {
     
     void insert() {
         KhachHang model = getForm();
-
-        try {
-            validateInput();//ktra  du lieu ng dung nhap hay chua
-            dao.insert(model);
-            this.fillTable();
-            this.clear();
-            MsgBox.alert(this, "Thêm mới thành công!");
-        } catch (Exception e) {
-            MsgBox.alert(this, "Thêm mới thất bại!");
+        if(validateInput()){
+            try {
+                dao.insert(model);
+                this.fillTable();
+                this.clear();
+                MsgBox.alert(this, "Thêm mới thành công!");
+            } catch (Exception e) {
+                MsgBox.alert(this, "Thêm mới thất bại!");
+            }
         }
+        else MsgBox.alert(this, "Thêm mới thất bại!");
     }
     void update() {
        KhachHang model = getForm();
@@ -229,15 +313,21 @@ public class QLKhachHang1 extends javax.swing.JDialog {
 
         jLabel2.setText("Mã Khách Hàng:");
 
-        jLabel3.setText("Họ Tên:");
-
-        jLabel4.setText("SDT:");
-
-        txtSDT.addActionListener(new java.awt.event.ActionListener() {
+        txtMaKH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSDTActionPerformed(evt);
+                txtMaKHActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("Họ Tên:");
+
+        txtHoTen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHoTenActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("SDT:");
 
         jLabel5.setText("Email:");
 
@@ -445,6 +535,14 @@ public class QLKhachHang1 extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtMaKHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaKHActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaKHActionPerformed
+
+    private void txtHoTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHoTenActionPerformed
+
     private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
         // TODO add your handling code here:
         prev();
@@ -483,70 +581,9 @@ public class QLKhachHang1 extends javax.swing.JDialog {
         // TODO add your handling code here:
         delete();
     }//GEN-LAST:event_btnXoaActionPerformed
-    public static boolean isValidPhoneNumber(String phoneNumber) {
-        // Kiểm tra độ dài >= 10 và chỉ chứa số
-        return phoneNumber.matches("\\d{10,}");
-    }
 
-    public static boolean isValidEmail(String email) {
-        // Kiểm tra độ dài >= 10 và chỉ chứa số
-        return email.contains("@");
-    }
-    boolean isMaKHDoulicate(String maTest){
-        List<KhachHang> list = dao.selectAll();
-            for(KhachHang tk : list) {
-                if(maTest.equalsIgnoreCase(tk.getMaKH()))
-                    return true;
-            }
-        return false;
-    }
-    
-    boolean isSĐTDoulicate(String sdt){
-        List<KhachHang> list = dao.selectAll();
-            for(KhachHang tk : list) {
-                if(sdt.equalsIgnoreCase(tk.getSdt()))
-                    return true;
-            }
-        return false;
-        
-    }
-    boolean isEmailDoulicate(String email){
-        List<KhachHang> list = dao.selectAll();
-            for(KhachHang tk : list) {
-                if(email.equalsIgnoreCase(tk.getEmail()))
-                    return true;
-            }
-        return false;      
-    }
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
         // TODO add your handling code here:
-        //bắt lỗi nhập dữ liệu sdt
-        //tra ma trung thi ko luu và thông báo
-        if(isMaKHDoulicate(txtMaKH.getText())){
-             MsgBox.alert(this, "MaKH trung, mời nhập maxKH mới!");
-            return;
-        }
-        
-        if (!isValidPhoneNumber(txtSDT.getText())) {
-            MsgBox.alert(this, "SDT ko hợp lệ!");
-            return;
-        }
-        //bắt lỗi nhập dữ liệu email
-        if (!isValidEmail(txtEmail.getText())) {
-            MsgBox.alert(this, "Email ko hợp lệ!");
-            return;
-        }
-        
-        
-        if(isSĐTDoulicate(txtSDT.getText())){
-             MsgBox.alert(this, "SDT trung, mời nhập SDT mới!");
-            return;
-        }
-        //tra email trung thi ko luu và thông báo
-        if(isEmailDoulicate(txtEmail.getText())){
-             MsgBox.alert(this, "Email trung, mời nhập email mới!");
-            return;
-        }
         insert();
     }//GEN-LAST:event_btnLuuActionPerformed
 
@@ -568,10 +605,6 @@ public class QLKhachHang1 extends javax.swing.JDialog {
     private void tblKhachHangMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhachHangMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_tblKhachHangMouseReleased
-
-    private void txtSDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSDTActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSDTActionPerformed
 
     
     /**

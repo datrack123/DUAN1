@@ -56,7 +56,7 @@ public class BCTK2 extends javax.swing.JDialog {
             }
         } catch (Exception e) {
             System.out.println(""+e);
-            MsgBox.alert(this, "Lỗi truy vấn dữ liệu2!");
+            MsgBox.alert(this, "Lỗi filltabledoanhthu2!");
         }
     }
     
@@ -112,7 +112,7 @@ public class BCTK2 extends javax.swing.JDialog {
                 model.addRow(row);
             }
         } catch (Exception e) {
-            MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
+            MsgBox.alert(this, "Lỗi filltable!");
         }
     }
     /**

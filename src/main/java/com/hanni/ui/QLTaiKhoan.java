@@ -24,26 +24,26 @@ public class QLTaiKhoan extends javax.swing.JDialog {
      */
     TaiKhoanDAO dao = new TaiKhoanDAO();
     int row = 0;
-
+    
     public QLTaiKhoan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         init();
     }
-
+    
     void init() {
         setLocationRelativeTo(null);
-        fillTable2();//ddoor dl tuwf sql leen table
+        fillTable();
         //setIconImage(XImage.getAppIcon());
     }
-
+    
     void fillTable() {
         DefaultTableModel model = (DefaultTableModel) tblTaiKhoan.getModel();
         model.setRowCount(0);
-
+        
         try {
             List<TaiKhoan> list = dao.selectAll();
-            for (TaiKhoan tk : list) {
+            for(TaiKhoan tk : list) {
                 Object[] row = {
                     tk.getMaTK(),
                     tk.getMatKhau(),
@@ -59,61 +59,41 @@ public class QLTaiKhoan extends javax.swing.JDialog {
             MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
         }
     }
-void fillTable2() {
-        DefaultTableModel model = (DefaultTableModel) tblTaiKhoan.getModel();
-        model.setRowCount(0);
-
-        try {
-            List<TaiKhoan> list = dao.selectAll();
-            for (TaiKhoan tk : list) {
-                Object[] row = {
-                    tk.getMaTK(),
-                 //   tk.getMatKhau(),
-                    tk.getHoTen(),
-                    tk.getDiaChi(),
-                    tk.getSdt(),
-                    tk.getEmail(),
-                    tk.isVaiTro() ? "0" : "1"
-                };
-                model.addRow(row);
-            }
-        } catch (Exception e) {
-            MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
-        }
-    }
+    
     void edit() {
         try {
-            String maTK = (String) tblTaiKhoan.getValueAt(this.row, 0);
+            String maTK = (String)tblTaiKhoan.getValueAt(this.row, 0);
             TaiKhoan model = dao.selectById(maTK);
-            if (model != null) {
+            if(model != null)
+            {
                 setForm(model);
                 updateStatus();
                 //tabs.setSelectedIndex(0);
-
+                
             }
         } catch (Exception e) {
             MsgBox.alert(this, "Lỗi truy vấn dữ liệu!");
         }
     }
-
+    
     boolean validateInput() {
         String maTK = txtMaTK.getText().trim();
-        String matKhau = txtMatKhau.getText().trim(); // người dùng không thấy mật khẩu
+        String matKhau = txtMatKhau.getText().trim();
         String hoTen = txtHoTen.getText().trim();
         String sdt = txtSDT.getText().trim();
         String email = txtEmail.getText().trim();
 
-        if (txtMaTK.getText() == null || maTK.isEmpty() || matKhau.isEmpty() || hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty()) {
+        if (txtMaTK.getText()==null || maTK.isEmpty() || matKhau.isEmpty() || hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty()) {
             MsgBox.alert(this, "Vui lòng nhập đầy đủ thông tin!");
             return false;
         }
         return true;
     }
-
-    TaiKhoan getForm() {
+    
+    TaiKhoan getForm(){
         TaiKhoan nv = new TaiKhoan();
         nv.setMaTK(txtMaTK.getText());
-        nv.setMatKhau(txtMatKhau.getText()); //không cho người khác thấy mật khẩu
+        nv.setMatKhau(txtMatKhau.getText());
         nv.setHoTen(txtHoTen.getText());
         nv.setDiaChi(txtDiachi.getText());
         nv.setSdt(txtSDT.getText());
@@ -121,18 +101,18 @@ void fillTable2() {
         nv.setVaiTro(rdoQuanLy.isSelected());
         return nv;
     }
-
+    
     void setForm(TaiKhoan model) {
         txtMaTK.setText(model.getMaTK());
         txtMatKhau.setText(model.getMatKhau());
-        txtHoTen.setText(model.getHoTen());
+        txtHoTen.setText(model.getHoTen());        
         txtDiachi.setText(model.getDiaChi());
         txtSDT.setText(model.getSdt());
         txtEmail.setText(model.getEmail());
         rdoQuanLy.setSelected(model.isVaiTro());
         rdoNhanVien.setSelected(!model.isVaiTro());
     }
-
+    
     void updateStatus() {
         boolean edit = this.row >= 0;
         boolean first = this.row == 0;
@@ -142,55 +122,52 @@ void fillTable2() {
         btnThem.setEnabled(!edit);
         btnSua.setEnabled(edit);
         btnXoa.setEnabled(edit);
-
+    
         btnFirst.setEnabled(edit && !first);
         btnPrev.setEnabled(edit && !first);
         btnNext.setEnabled(edit && !last);
         btnLast.setEnabled(edit && !last);
     }
-
+    
     void clear() {
         TaiKhoan nv = new TaiKhoan();
         this.setForm(nv);
         this.row = -1;
         this.updateStatus();
     }
-
+    
     void insert() {
-        if (validateInput() == true) {
+        if(validateInput() == true) {
             TaiKhoan model = getForm();
             try {
 
                 dao.insert(model);
-                this.fillTable2();
+                this.fillTable();
                 this.clear();
                 MsgBox.alert(this, "Thêm mới thành công!");
-
             } catch (Exception e) {
                 MsgBox.alert(this, "Thêm mới thất bại!");
             }
-        }
+        }  
     }
-
     void update() {
-        if (validateInput() == true) {
+        if(validateInput() == true) {
             TaiKhoan model = getForm();
             try {
                 dao.update(model);
-                this.fillTable2();
+                this.fillTable();
                 MsgBox.alert(this, "Cập nhật thành công!");
             } catch (Exception e) {
                 MsgBox.alert(this, "Cập nhật thất bại!");
-            }
+            }   
         }
     }
-
     void delete() {
-        if (MsgBox.confirm(this, "Bạn thực sự muốn xóa Tài Khoản! này?")) {
+        if(MsgBox.confirm(this, "Bạn thực sự muốn xóa Tài Khoản! này?")) {
             String maTK = txtMaTK.getText();
             try {
                 dao.delete(maTK);
-                this.fillTable2();
+                this.fillTable();
                 this.clear();
                 MsgBox.alert(this, "Xóa thành công!");
             } catch (Exception e) {
@@ -198,26 +175,23 @@ void fillTable2() {
             }
         }
     }
-
+    
     void first() {
         row = 0;
         edit();
     }
-
     void prev() {
-        if (row > 0) {
+        if(row > 0) {
             row--;
             edit();
         }
     }
-
     void next() {
-        if (row < tblTaiKhoan.getRowCount() - 1) {
+        if(row < tblTaiKhoan.getRowCount() - 1) {
             row++;
             edit();
         }
     }
-
     void last() {
         row = tblTaiKhoan.getRowCount() - 1;
         edit();
@@ -256,7 +230,7 @@ void fillTable2() {
         jLabel7 = new javax.swing.JLabel();
         btnLuu = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        txtMatKhau = new javax.swing.JPasswordField();
+        txtMatKhau = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblTaiKhoan = new javax.swing.JTable();
         btnFirst = new javax.swing.JButton();
@@ -318,12 +292,6 @@ void fillTable2() {
         jLabel4.setText("SDT:");
 
         jLabel5.setText("Email:");
-
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
-            }
-        });
 
         jLabel6.setText("Địa Chỉ:");
 
@@ -392,21 +360,20 @@ void fillTable2() {
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtMaTK, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                            .addComponent(txtMatKhau))))
+                            .addComponent(txtMatKhau, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                            .addComponent(txtMaTK))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtMaTK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel8))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtMaTK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
                     .addComponent(txtMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
@@ -441,13 +408,13 @@ void fillTable2() {
         tblTaiKhoan.setBackground(new java.awt.Color(255, 250, 243));
         tblTaiKhoan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã TK", "Họ tên", "Địa Chỉ", "SDT", "Email", "Vai Trò"
+                "Mã TK", "Mật Khẩu", "Họ tên", "Địa Chỉ", "SDT", "Email", "Vai Trò"
             }
         ));
         tblTaiKhoan.setEnabled(false);
@@ -549,7 +516,7 @@ void fillTable2() {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void txtMaTKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaTKActionPerformed
-        // không để người khác thấy mật khẩu
+        // TODO add your handling code here:
     }//GEN-LAST:event_txtMaTKActionPerformed
 
     private void txtHoTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenActionPerformed
@@ -561,10 +528,10 @@ void fillTable2() {
         prev();
     }//GEN-LAST:event_btnPrevActionPerformed
 
-
     private void tblTaiKhoanMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTaiKhoanMousePressed
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2) {
+        if(evt.getClickCount() == 2)
+        {
             this.row = tblTaiKhoan.rowAtPoint(evt.getPoint());
             edit();
         }
@@ -578,7 +545,7 @@ void fillTable2() {
     private void tblTaiKhoanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTaiKhoanMouseEntered
         // TODO add your handling code here:
     }//GEN-LAST:event_tblTaiKhoanMouseEntered
-    public static boolean isValidPhoneNumber(String phoneNumber) {
+public static boolean isValidPhoneNumber(String phoneNumber) {
         // Kiểm tra độ dài >= 10 và chỉ chứa số
         return phoneNumber.matches("\\d{10,}");
     }
@@ -586,65 +553,19 @@ void fillTable2() {
     public static boolean isValidEmail(String email) {
         // Kiểm tra độ dài >= 10 và chỉ chứa số
         return email.contains("@");
-        
-    }
-    boolean isMaTKDoulicate(String maTest){
-        List<TaiKhoan> list = dao.selectAll();
-            for(TaiKhoan tk : list) {
-                if(maTest.equalsIgnoreCase(tk.getMaTK()))
-                    return true;
-            }
-        return false;
-    }
-    
-    boolean isSdtDoulicate(String sdt){
-        List<TaiKhoan> list = dao.selectAll();
-            for(TaiKhoan tk : list) {
-                if(sdt.equals(tk.getSdt().trim()))//trim() cat bo ký tự trống trước và sau của chuỗi
-                    return true;
-            }
-        return false;
-        
-    }
-    boolean isEmailDoulicate(String email){
-        List<TaiKhoan> list = dao.selectAll();
-            for(TaiKhoan tk : list) {
-                if(email.equalsIgnoreCase(tk.getEmail()))
-                    return true;
-            }
-        return false;      
     }
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
         // TODO add your handling code here:
-        //bắt lỗi nhập dữ liệu sdt
-         //tra ma trung thi ko luu và thông báo
-        if(isMaTKDoulicate(txtMaTK.getText())){
-             MsgBox.alert(this, "MaKH trung, mời nhập maxKH mới!");
+        if(!isValidPhoneNumber(txtSDT.getText())){
+            MsgBox.alert(this, "So dien thoai phai la so"); 
             return;
         }
-        if (!isValidPhoneNumber(txtSDT.getText())) {
-            MsgBox.alert(this, "SDT phai la 10 so!");
+         if(!isValidEmail(txtEmail.getText())){
+            MsgBox.alert(this, "Email phai co @"); 
             return;
         }
-        //bắt lỗi nhập dữ liệu email
-        if (!isValidEmail(txtEmail.getText())) {
-            MsgBox.alert(this, "Email ko hợp lệ!");
-            return;
-        }
-        
-        if(isSdtDoulicate(txtSDT.getText())){
-             MsgBox.alert(this, "SDT trung, mời nhập SDT mới!");
-            return;
-        }
-        //tra email trung thi ko luu và thông báo
-        if(isEmailDoulicate(txtEmail.getText())){
-             MsgBox.alert(this, "Email trung, mời nhập email mới!");
-            return;
-        }
-        
         insert();
-
-
+        
     }//GEN-LAST:event_btnLuuActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -673,10 +594,6 @@ void fillTable2() {
         buttonGroup.add(rdoNhanVien);
         buttonGroup.add(rdoQuanLy);
     }//GEN-LAST:event_rdoNhanVienMouseClicked
-
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
 
     /**
      * @param args the command line arguments
@@ -750,7 +667,7 @@ void fillTable2() {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtHoTen;
     private javax.swing.JTextField txtMaTK;
-    private javax.swing.JPasswordField txtMatKhau;
+    private javax.swing.JTextField txtMatKhau;
     private javax.swing.JTextField txtSDT;
     // End of variables declaration//GEN-END:variables
 }

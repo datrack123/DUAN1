@@ -33,7 +33,7 @@ public class FormDangNhap extends javax.swing.JDialog {
             System.exit(0);
         }
     }
-    // sai tài khoản mật khẩu không cho vô chương trình
+    
     void dangNhap() {
         String strTenDN = txtTenDN.getText();
         String strPass = new String(txtMatKhau.getPassword());
@@ -52,7 +52,7 @@ public class FormDangNhap extends javax.swing.JDialog {
                 Auth.user = tk;
                 this.dispose();
             }
-        }       
+        }
     }
 
     /**
@@ -83,11 +83,6 @@ public class FormDangNhap extends javax.swing.JDialog {
         jLabel2.setText("Tên đăng nhập :");
 
         txtTenDN.setText("TK001");
-        txtTenDN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTenDNActionPerformed(evt);
-            }
-        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(51, 51, 255));
@@ -96,12 +91,6 @@ public class FormDangNhap extends javax.swing.JDialog {
         jLabel3.setText("Mật khẩu :");
 
         txtMatKhau.setText("123456");
-        txtMatKhau.setToolTipText("");
-        txtMatKhau.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMatKhauActionPerformed(evt);
-            }
-        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/security.png"))); // NOI18N
 
@@ -198,9 +187,9 @@ public class FormDangNhap extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-  
+
     private void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangNhapActionPerformed
-              
+        // TODO add your handling code here:
         dangNhap();
     }//GEN-LAST:event_btnDangNhapActionPerformed
 
@@ -208,14 +197,6 @@ public class FormDangNhap extends javax.swing.JDialog {
         // TODO add your handling code here:
         thoat();
     }//GEN-LAST:event_btnThoatActionPerformed
-
-    private void txtTenDNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenDNActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTenDNActionPerformed
-
-    private void txtMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMatKhauActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMatKhauActionPerformed
 
     /**
      * @param args the command line arguments
